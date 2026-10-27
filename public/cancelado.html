@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pago cancelado — Sun Shine</title>
+  <meta name="theme-color" content="#F5A524">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icono.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <main class="mensaje">
+    <p class="marca"><span class="sol" aria-hidden="true"></span>Sun Shine</p>
+    <h1 id="titulo">No se hizo ningún cobro</h1>
+    <p id="texto">Cancelaste el pago antes de terminar. Tu carrito sigue guardado: puedes volver a la tienda e intentarlo cuando quieras.</p>
+    <p><a href="/" id="volver">Volver a la tienda</a></p>
+  </main>
+<script>
+if (new URLSearchParams(location.search).get('lang') === 'en') {
+  document.documentElement.lang = 'en';
+  document.title = 'Payment canceled — Sun Shine';
+  document.getElementById('titulo').textContent = 'You were not charged';
+  document.getElementById('texto').textContent = 'You canceled the payment before finishing. Your cart is still saved, so you can go back and try again anytime.';
+  const v = document.getElementById('volver');
+  v.textContent = 'Back to store';
+  v.href = '/?lang=en';
+}
+</script>
+</body>
+</html>

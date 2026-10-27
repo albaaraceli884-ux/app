@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Rastrear mi pedido — Sun Shine</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#F5A524">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icono.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <main class="apartado-pagina">
+    <div class="barra-superior">
+      <a class="marca" href="/" id="inicio" style="color:inherit;text-decoration:none"><span class="sol" aria-hidden="true"></span>Sun Shine</a>
+      <a class="enlace-apartado" href="/" id="ir-tienda" data-t="irTienda">Ir a la tienda</a>
+    </div>
+    <h1 data-t="titulo">Rastrear mi pedido</h1>
+
+    <form class="buscar-apartado" id="buscar">
+      <label for="numero" class="nota" style="flex-basis:100%;margin:0" data-t="instruccion">Escribe tu número de pedido y el correo con el que compraste.</label>
+      <input id="numero" placeholder="SS-XXXXXX" autocomplete="off" spellcheck="false" required>
+      <input id="email" type="email" data-t-placeholder="correo" placeholder="tu@correo.com" autocomplete="email" required style="text-transform:none;letter-spacing:0">
+      <button type="submit" data-t="buscarBtn">Buscar</button>
+    </form>
+    <p class="nota" data-t="paypalNota">¿Pagaste con PayPal? El seguimiento de tu envío también aparece en tu cuenta de PayPal.</p>
+    <p class="estado-carga" id="carga" aria-live="polite"></p>
+    <p class="error" id="error" role="alert" hidden></p>
+
+    <section id="detalle" hidden>
+      <div class="tarjeta">
+        <p style="margin:0;display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap;align-items:center">
+          <span><span data-t="pedido">Pedido</span> <span class="codigo" id="d-numero"></span></span>
+          <span class="chip" id="d-pago"></span>
+        </p>
+        <p class="nota" id="d-fecha"></p>
+
+        <ol class="linea-tiempo" id="d-pasos"></ol>
+        <p id="d-detalle-envio" class="detalle-envio"></p>
+        <p id="d-rastreo" hidden><a class="btn-principal" id="d-rastreo-enlace" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none" data-t="verRastreo">Ver rastreo en la paquetería ↗</a></p>
+        <p id="d-apartado" hidden><a class="btn-secundario" id="d-apartado-enlace" style="display:inline-block;text-decoration:none" data-t="verApartado">Ver mi apartado</a></p>
+      </div>
+
+      <div class="tarjeta">
+        <h2 style="font-size:1.05rem;margin:0 0 .5rem" data-t="productos">Productos</h2>
+        <ul class="lista-simple" id="d-articulos"></ul>
+      </div>
+    </section>
+  </main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let idioma = params.get('lang');
+if (!idioma) { try { idioma = localStorage.getItem('idioma-sunshine'); } catch {} }
+if (idioma !== 'en') idioma = 'es';
+const locale = idioma === 'en' ? 'en-US' : 'es-MX';
+
+const T = {
+  es: {
+    titulo: 'Rastrear mi pedido', irTienda: 'Ir a la tienda', instruccion: 'Escribe tu número de pedido y el correo con el que compraste.',
+    correo: 'tu@correo.com', buscarBtn: 'Buscar', pedido: 'Pedido', productos: 'Productos', buscando: 'Buscando tu pedido…',
+    paypalNota: '¿Pagaste con PayPal? El seguimiento de tu envío también aparece en tu cuenta de PayPal.',
+    verRastreo: 'Ver rastreo en la paquetería ↗', verApartado: 'Ver mi apartado',
+    pago: { pagado: 'Pagado', pendiente: 'Pago en proceso', no_pagado: 'Sin pagar' },
+    pasosDomicilio: ['Recibido', 'Preparando', 'Enviado', 'Entregado'],
+    pasosSucursal: ['Recibido', 'Preparando', 'Listo para recoger', 'Entregado'],
+    fecha: (f) => `Fecha de compra: ${f}`,
+    enviadoCon: (p, g) => `Enviado con ${p}${g ? ` · Guía ${g}` : ''}.`,
+    recoger: (s) => `Recoges en: ${s.nombre} — ${s.direccion}, ${s.ciudad} · Horario: ${s.horario}. Lleva tu número de pedido y una identificación.`,
+    domicilio: 'Entrega a domicilio a la dirección que diste al pagar.',
+    error: 'No se pudo consultar el pedido.',
+  },
+  en: {
+    titulo: 'Track my order', irTienda: 'Back to store', instruccion: 'Enter your order number and the email you used to buy.',
+    correo: 'you@email.com', buscarBtn: 'Search', pedido: 'Order', productos: 'Items', buscando: 'Looking up your order…',
+    paypalNota: 'Paid with PayPal? Your shipment tracking also appears in your PayPal account.',
+    verRastreo: 'Track with the carrier ↗', verApartado: 'View my layaway',
+    pago: { pagado: 'Paid', pendiente: 'Payment processing', no_pagado: 'Unpaid' },
+    pasosDomicilio: ['Received', 'Preparing', 'Shipped', 'Delivered'],
+    pasosSucursal: ['Received', 'Preparing', 'Ready for pickup', 'Picked up'],
+    fecha: (f) => `Order date: ${f}`,
+    enviadoCon: (p, g) => `Shipped with ${p}${g ? ` · Tracking ${g}` : ''}.`,
+    recoger: (s) => `Pick up at: ${s.nombre} — ${s.direccion}, ${s.ciudad} · Hours: ${s.horario}. Bring your order number and an ID.`,
+    domicilio: 'Home delivery to the address you gave at checkout.',
+    error: 'We could not load the order.',
+  },
+};
+const t = (k, ...a) => { const v = T[idioma][k]; return typeof v === 'function' ? v(...a) : v; };
+document.documentElement.lang = idioma;
+document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+document.querySelectorAll('[data-t-placeholder]').forEach(el => { el.placeholder = t(el.dataset.tPlaceholder); });
+for (const a of [$('inicio'), $('ir-tienda')]) a.href = `/?lang=${idioma}`;
+const esc = (x) => String(x ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+// Orden de los estados para la línea de tiempo
+const ORDEN = { recibido: 0, preparando: 1, enviado: 2, listo: 2, entregado: 3 };
+
+async function buscar(numero, email) {
+  $('error').hidden = true;
+  $('carga').textContent = t('buscando');
+  try {
+    const q = new URLSearchParams({ numero, email, idioma });
+    const r = await fetch('/api/pedido?' + q);
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error);
+    pintar(d);
+    $('carga').textContent = '';
+  } catch (err) {
+    $('carga').textContent = '';
+    $('detalle').hidden = true;
+    $('error').textContent = err.message || t('error');
+    $('error').hidden = false;
+  }
+}
+
+function pintar(d) {
+  $('detalle').hidden = false;
+  $('d-numero').textContent = d.numero;
+  $('d-pago').textContent = t('pago')[d.pago] || d.pago;
+  $('d-pago').className = 'chip ' + (d.pago === 'pagado' ? 'pagado' : 'pendiente');
+  $('d-fecha').textContent = t('fecha', new Date(d.fecha).toLocaleDateString(locale, { dateStyle: 'long' }));
+
+  const sucursal = d.envio.tipo === 'sucursal';
+  const pasos = sucursal ? t('pasosSucursal') : t('pasosDomicilio');
+  const actual = ORDEN[d.envio.estado] ?? 0;
+  $('d-pasos').innerHTML = pasos.map((p, i) => `<li class="${i < actual ? 'hecho' : i === actual ? 'actual' : ''}"${i === actual ? ' aria-current="step"' : ''}>${esc(p)}</li>`).join('');
+
+  const partes = [];
+  if (sucursal && d.envio.sucursal) partes.push(t('recoger', d.envio.sucursal));
+  else if (!sucursal) partes.push(t('domicilio'));
+  if (d.envio.paqueteria || d.envio.guia) partes.push(t('enviadoCon', d.envio.paqueteria || '', d.envio.guia));
+  $('d-detalle-envio').textContent = partes.join(' ');
+  $('d-rastreo').hidden = !d.envio.rastreo;
+  if (d.envio.rastreo) $('d-rastreo-enlace').href = d.envio.rastreo;
+  $('d-apartado').hidden = !d.apartado;
+  if (d.apartado) $('d-apartado-enlace').href = `/apartado.html?id=${encodeURIComponent(d.apartado)}&lang=${idioma}`;
+
+  $('d-articulos').innerHTML = d.articulos.map(a => `<li><span>${esc(a.nombre)}</span><span>× ${a.cantidad}</span></li>`).join('');
+}
+
+$('buscar').addEventListener('submit', (e) => {
+  e.preventDefault();
+  buscar($('numero').value.trim().toUpperCase(), $('email').value.trim());
+});
+if (params.get('numero')) $('numero').value = params.get('numero');
+</script>
+</body>
+</html>

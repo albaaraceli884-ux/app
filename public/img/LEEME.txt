@@ -1,0 +1,2 @@
+Pon aquí las fotos de tus productos (por ejemplo toallas.jpg)
+y en productos.js usa: imagen: 'img/toallas.jpg'
