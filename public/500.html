@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Algo salió mal — Sun Shine</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#F5A524">
+  <link rel="icon" href="/icono.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <main class="pagina-error">
+    <div class="barra-superior">
+      <a class="marca" href="/" style="color:inherit;text-decoration:none"><span class="sol" aria-hidden="true"></span>Sun Shine</a>
+      <button type="button" class="idioma" id="cambiar-idioma">EN</button>
+    </div>
+
+    <div class="error-cabecera">
+      <div class="sol-error tormenta" aria-hidden="true"><span class="nube"></span></div>
+      <div>
+        <p class="codigo-error" aria-hidden="true">500</p>
+        <h1><span data-idioma="es">Se nos nubló el sistema por un momento</span><span data-idioma="en" hidden>Our system clouded over for a moment</span></h1>
+        <p data-idioma="es">Tuvimos un problema al mostrar esta página. No es tu culpa y ya quedó registrado para revisarlo.</p>
+        <p data-idioma="en" hidden>We had a problem showing this page. It is not your fault, and it has been logged so we can fix it.</p>
+      </div>
+    </div>
+
+    <div class="tarjeta tranquilidad">
+      <h2><span data-idioma="es">Tu compra está segura</span><span data-idioma="en" hidden>Your purchase is safe</span></h2>
+      <ul>
+        <li data-idioma="es"><strong>Tu carrito sigue guardado</strong> en este dispositivo.</li>
+        <li data-idioma="en" hidden><strong>Your cart is still saved</strong> on this device.</li>
+        <li data-idioma="es">Si estabas pagando, <strong>no se cobra dos veces</strong>: revisa tu correo; si te llegó el recibo, tu pago está confirmado.</li>
+        <li data-idioma="en" hidden>If you were paying, <strong>you will not be charged twice</strong>: check your email; if you got a receipt, your payment is confirmed.</li>
+        <li data-idioma="es">Tus datos de tarjeta nunca pasan por nuestros servidores (los protege Stripe o PayPal).</li>
+        <li data-idioma="en" hidden>Your card details never touch our servers (Stripe or PayPal protect them).</li>
+      </ul>
+    </div>
+
+    <div class="error-ayuda">
+      <a class="cta-catalogo" href="" id="reintentar"><span data-idioma="es">↻ Intentar de nuevo</span><span data-idioma="en" hidden>↻ Try again</span></a>
+      <a href="/"><span data-idioma="es">Volver al inicio</span><span data-idioma="en" hidden>Back to home</span></a>
+      <a href="/pedido.html"><span data-idioma="es">Rastrear mi pedido</span><span data-idioma="en" hidden>Track my order</span></a>
+    </div>
+
+    <p class="nota">
+      <span data-idioma="es">Si el problema sigue, escríbenos a __CORREO__ o al __TELEFONO__ y menciona esta referencia:</span>
+      <span data-idioma="en" hidden>If the problem continues, contact us at __CORREO__ or __TELEFONO__ and mention this reference:</span>
+      <span class="codigo">__REF__</span>
+    </p>
+  </main>
+<script src="/js/error.js"></script>
+</body>
+</html>

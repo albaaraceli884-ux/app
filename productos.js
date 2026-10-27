@@ -18,6 +18,14 @@
 module.exports = {
   NEGOCIO: {
     nombre: 'Sun Shine',
+    // Datos del negocio para el Aviso de privacidad y los Términos de uso.
+    // ⚠️ Llénalos antes de abrir al público (aparecen resaltados mientras estén vacíos).
+    legal: {
+      razonSocial: '', // p. ej. 'Nombre Apellido' (persona física) o 'Sun Shine S.A. de C.V.'
+      domicilio: '',   // calle, número, colonia, ciudad, estado, C.P.
+      correo: '',      // correo de atención a clientes
+      telefono: '',    // teléfono o WhatsApp de atención
+    },
     lema: 'Todo para tu casa, tu oficina, la escuela y tu día a día.',
     intro: 'Hogar, cocina, electrodomésticos, electrónicos, oficina, escolar, jardinería y limpieza, con marcas reconocidas para todas las edades.',
     en: {
@@ -125,6 +133,13 @@ module.exports = {
   // Meses sin intereses con tarjeta (solo México, pago completo). Requiere
   // que tu cuenta de Stripe en México tenga activadas las mensualidades.
   MESES_SIN_INTERESES: true,
+
+  // Devoluciones: plazo para pedirlas, bono del saldo a favor y su vigencia
+  DEVOLUCIONES: {
+    diasParaSolicitar: 30,   // días desde la entrega (o la compra) para pedir devolución en línea
+    bonoSaldoPorcentaje: 10, // si el cliente elige saldo a favor, recibe 10% más
+    vigenciaSaldoDias: 180,  // el código de saldo a favor vence a los 6 meses
+  },
 
   // Apartados: el cliente paga un anticipo y liquida el resto después
   APARTADO: {

@@ -2,8 +2,8 @@
 // Las páginas y archivos se piden siempre a la red primero (para que los
 // precios y productos estén al día); la caché solo se usa si no hay conexión.
 // Las rutas /api y el pago NUNCA se guardan en caché.
-const CACHE = 'sunshine-v2';
-const BASE = ['/', '/estilos.css', '/musica.js', '/icono.svg', '/manifest.webmanifest'];
+const CACHE = 'sunshine-v3';
+const BASE = ['/', '/estilos.css', '/musica.js', '/js/index.js', '/icono.svg', '/manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(BASE)).then(() => self.skipWaiting()));

@@ -53,6 +53,32 @@ Cada compra recibe un **número de pedido** (`SS-XXXXXX`) que aparece en la conf
 - **Tú, en el panel:** en cada pedido pagado con tarjeta eliges el estado (*Recibido → Preparando → Enviado / Listo para recoger → Entregado*), la paquetería y el número de guía, y pulsas **Guardar**. Los pedidos pagados con PayPal se registran en tu cuenta de PayPal (Actividad → el pago → *Agregar seguimiento*).
 - **El cliente:** en **Rastrear mi pedido** (`/pedido.html`) escribe su número de pedido y su correo, y ve en qué paso va, la sucursal donde recoge o el enlace de rastreo de la paquetería (DHL, FedEx, UPS, USPS, Estafeta, Redpack, Correos de México).
 
+## Devoluciones: buena atención sin poner en riesgo tu dinero
+
+### Cómo funciona en la tienda
+
+| Paso | Quién | Dónde | Qué pasa |
+|---|---|---|---|
+| 1. Solicitud | Cliente | **Rastrear mi pedido** → *Solicitar devolución o cambio* | Elige el motivo y qué prefiere: **cambio**, **saldo a favor (+10%)** o **reembolso**. Solo dentro de 30 días y para pedidos pagados. |
+| 2. Revisión | Tú | Panel → el pedido con ↩️ | **Aprobar y pedir el producto** (le escribes con las instrucciones) o **Rechazar**. |
+| 3. Recepción | Tú | Panel | Cuando el producto llega y lo revisas: **Ya recibí el producto**. |
+| 4. Resolución | Tú | Panel | **Cambio** (envías otro), **Saldo a favor** (se crea un código `SF-XXXXXX` con 10% extra que el cliente usa al pagar con tarjeta) o **Reembolsar** (total o parcial; el dinero regresa a su tarjeta por Stripe). |
+| ↺ Restaurar venta | Tú | Panel | Si el cliente se arrepiente o la devolución no procede, la cancelas y el pedido **vuelve a contar como venta normal**. No se puede usar si ya diste reembolso o saldo. |
+
+El cliente ve en todo momento el estado en "Rastrear mi pedido". Las devoluciones de pedidos pagados con **PayPal** se resuelven en tu cuenta de PayPal (Actividad → el pago → *Reembolsar*), y las de productos de Amazon, con Amazon.
+
+### Cómo proteger tu flujo de dinero sin descuidar al cliente
+
+1. **Ofrece primero el cambio, luego el saldo a favor y al final el reembolso.** El formulario ya los presenta en ese orden, y el saldo lleva un 10% extra para que sea la opción más atractiva: el cliente gana más y el dinero se queda en tu tienda.
+2. **Nunca reembolses antes de tener el producto en tus manos.** El panel solo permite resolver cuando la devolución está en *Producto recibido*.
+3. **Revisa el producto:** que esté completo, sin uso y con empaque. Si llega usado o incompleto, usa el **reembolso parcial** (escribe el monto) o rechaza explicando el motivo por correo.
+4. **Separa una reserva** de cada venta (por ejemplo 3–5%) para cubrir devoluciones; así un reembolso no te deja sin dinero para resurtir.
+5. **Recuerda las comisiones:** al reembolsar, Stripe y PayPal normalmente **no te devuelven su comisión** del cobro original. Por eso el cambio o el saldo a favor te cuestan menos (confírmalo en las condiciones actuales de cada uno).
+6. **Producto devuelto en buen estado = vuélvelo a vender.** Revísalo, re-empácalo y regrésalo a tu inventario. Si tiene detalles, véndelo como "caja abierta" con descuento o reclama al proveedor si es defecto de fábrica.
+7. **Mide los motivos.** El Excel trae columnas *Devolución*, *Motivo*, *Resolución* y *Monto*. Si un producto se devuelve mucho por "defectuoso" o "no es lo que pedí", cambia de proveedor o mejora su descripción y fotos.
+8. **Evita contracargos** (cuando el cliente reclama directo a su banco): responde rápido, guarda la guía de envío y la firma de entrega o la identificación en sucursal, y ofrece solución antes de que acudan al banco. Cada contracargo tiene una comisión.
+9. **En México** respeta los derechos del consumidor (PROFECO): los productos con defecto siempre se cambian o reembolsan. Lo anterior aplica a devoluciones por cambio de opinión.
+
 ## Música y presentación de productos
 
 - Botón **♪ Música** (arriba): melodía original generada en el navegador (sin canciones con derechos de autor). Nunca suena sola; el cliente la enciende.
@@ -158,11 +184,37 @@ Requiere Node.js 18+.
 
 ```bash
 npm install
+npm run auditar      # revisa vulnerabilidades de las dependencias
 cp .env.example .env   # y edítalo con tus llaves de prueba
 npm start              # http://localhost:4242
 ```
 
-## Seguridad
+## Seguridad y calidad (lista de 20 puntos)
+
+| # | Punto | Cómo lo cumple la tienda |
+|---|---|---|
+| 1 | Secretos protegidos | Todas las llaves (Stripe, PayPal, contraseña del panel, Amazon) van en variables de entorno. `.env` está en `.gitignore`. El navegador solo recibe el Client ID público de PayPal. |
+| 2 | Validación en el servidor | El servidor recalcula precios, envío y anticipo con sus propios datos; valida IDs de producto, cantidades (1–20), región, forma de entrega, sucursal, códigos `AP-…`/`SS-…`, IDs de Stripe y PayPal, correo y montos de abono. |
+| 3 | Límites máximos | Peticiones de máx. 20 KB; máx. 50 productos distintos y 20 piezas de cada uno por compra; buscador y guía de envío limitados; consultas a Stripe y PayPal con tope de registros. No hay subida de archivos. |
+| 4 | XSS y CSP | Todo texto se escapa antes de mostrarse (`esc()`), y el código de las páginas está en `/public/js` (sin scripts dentro del HTML). El servidor envía una **Content-Security-Policy** que solo permite scripts de este sitio y de PayPal. |
+| 5 | Inyección SQL | No hay base de datos SQL. Las búsquedas en Stripe solo usan códigos que antes pasan una validación estricta. |
+| 6 | Autenticación y permisos | El panel `/admin.html` y todas sus rutas piden `ADMIN_PASSWORD` (comparación segura). Un cliente solo ve su apartado con su código secreto, o su pedido con número **y** correo. |
+| 7 | Rate limiting | 300 peticiones / 5 min por IP en la API, 30 / 10 min en pagos, 10 intentos de contraseña del panel / 15 min y 20 búsquedas de pedido / 15 min. |
+| 8 | HTTPS y encabezados | Redirección a HTTPS en Render, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy y CSP. |
+| 9 | CORS | No se envían encabezados CORS (ningún otro dominio puede leer la API) y los POST de otros sitios se rechazan con 403. |
+| 10 | Dependencias | `npm run auditar` revisa vulnerabilidades y `npm run reparar` las corrige. **Córrelo después de instalar y antes de cada publicación.** |
+| 11 | Página 404 | `/404.html`: buscador, accesos a las 8 categorías, rastreo de pedido y enlace al inicio, en español e inglés. |
+| 12 | Página 500 | `/500.html`: sin detalles técnicos; muestra un número de referencia que también queda en el registro del servidor. La API responde errores genéricos. |
+| 13 | Estados de carga, vacío y error | Catálogo ("Cargando productos…", "No encontramos productos", error de carga), carrito vacío, panel, apartado, rastreo y página de éxito. |
+| 14 | Enlaces | Revisados: no hay `href="#"` ni enlaces `javascript:`; todas las páginas enlazadas existen. |
+| 15 | Responsive | Probado en celular (375 px) y computadora; en tableta usa el diseño de una columna. |
+| 16 | Accesibilidad | Textos alternativos, etiquetas en formularios, contraste alto, foco visible, enlace "Saltar al catálogo", navegación con teclado y sin animaciones si el sistema pide reducir movimiento. |
+| 17 | Rendimiento | Compresión, caché de archivos, carga diferida de imágenes, íconos ligeros, sin librerías pesadas. |
+| 18 | SEO y metadatos | Título, descripción, favicon, URL canónica, imagen para redes 1200×630 (`og-sunshine.png`), `robots.txt` y `sitemap.xml`. |
+| 19 | Legal | `/privacidad.html` y `/terminos.html` (español e inglés) y aviso de almacenamiento. **Llena tus datos en `productos.js` → `NEGOCIO.legal`.** Te recomendamos que un abogado los revise. |
+| 20 | Registros y respaldo | Todos los errores y ventas quedan en el registro del servidor (Render → **Logs**). No hay base de datos que respaldar: las ventas viven en Stripe y PayPal, y el **Excel del panel** sirve como respaldo descargable. |
+
+## Seguridad (resumen)
 
 - La llave secreta vive **solo** en las variables del servidor. Nunca en el HTML, GitHub ni chats.
 - Los precios se calculan en el servidor; nadie puede alterarlos desde el navegador.
@@ -185,6 +237,8 @@ npm start              # http://localhost:4242
 - [ ] Recibos por correo activados en Stripe (Settings → Customer emails)
 - [ ] Un pago real pequeño de prueba y su reembolso desde Stripe
 - [ ] `ADMIN_PASSWORD` larga y que solo tú conozcas
-- [ ] Aviso de privacidad, términos, política de devoluciones y **política de apartados** publicados
+- [ ] Tus datos en `productos.js` → `NEGOCIO.legal` (razón social, domicilio, correo, teléfono): aparecen en el aviso de privacidad, los términos y las páginas de error
+- [ ] Aviso de privacidad y términos revisados (idealmente por un abogado)
+- [ ] `npm run auditar` sin vulnerabilidades altas
 - [ ] Facturación: si emites facturas (CFDI en México), conecta tu sistema de facturación aparte
 - [ ] Plan **Starter** de Render (sin "dormir") y dominio propio

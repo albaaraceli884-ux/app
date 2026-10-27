@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Página no encontrada — Sun Shine</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#F5A524">
+  <link rel="icon" href="/icono.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <main class="pagina-error">
+    <div class="barra-superior">
+      <a class="marca" href="/" style="color:inherit;text-decoration:none"><span class="sol" aria-hidden="true"></span>Sun Shine</a>
+      <button type="button" class="idioma" id="cambiar-idioma">EN</button>
+    </div>
+
+    <div class="error-cabecera">
+      <div class="sol-error" aria-hidden="true"><span class="nube"></span></div>
+      <div>
+        <p class="codigo-error" aria-hidden="true">404</p>
+        <h1><span data-idioma="es">Esta página se fue a la sombra</span><span data-idioma="en" hidden>This page went into the shade</span></h1>
+        <p data-idioma="es">No encontramos lo que buscas. Puede que el enlace esté mal escrito, que el producto ya no esté disponible o que la página haya cambiado de lugar.</p>
+        <p data-idioma="en" hidden>We could not find what you are looking for. The link may be mistyped, the product may no longer be available, or the page may have moved.</p>
+      </div>
+    </div>
+
+    <!-- Buscador: funciona aunque el navegador no ejecute JavaScript -->
+    <form class="buscar-error" action="/" method="get" role="search">
+      <label for="q"><span data-idioma="es">Busca en la tienda</span><span data-idioma="en" hidden>Search the store</span></label>
+      <div class="buscar-fila">
+        <input id="q" name="q" type="search" maxlength="60" autocomplete="off" placeholder="Ej. licuadora, mochila, audífonos…" data-placeholder-en="E.g. blender, backpack, earbuds…">
+        <button type="submit"><span data-idioma="es">Buscar</span><span data-idioma="en" hidden>Search</span></button>
+      </div>
+    </form>
+
+    <h2 class="error-subtitulo"><span data-idioma="es">O explora una categoría</span><span data-idioma="en" hidden>Or browse a category</span></h2>
+    <ul class="mosaico error-categorias">
+      <li><a href="/#hogar" class="c-hogar"><span class="mosaico-icono" aria-hidden="true">🏠</span><strong><span data-idioma="es">Hogar</span><span data-idioma="en" hidden>Home</span></strong></a></li>
+      <li><a href="/#cocina" class="c-cocina"><span class="mosaico-icono" aria-hidden="true">🍳</span><strong><span data-idioma="es">Cocina</span><span data-idioma="en" hidden>Kitchen</span></strong></a></li>
+      <li><a href="/#electrodomesticos" class="c-electrodomesticos"><span class="mosaico-icono" aria-hidden="true">🔌</span><strong><span data-idioma="es">Electrodomésticos</span><span data-idioma="en" hidden>Appliances</span></strong></a></li>
+      <li><a href="/#electronicos" class="c-electronicos"><span class="mosaico-icono" aria-hidden="true">🎧</span><strong><span data-idioma="es">Electrónicos</span><span data-idioma="en" hidden>Electronics</span></strong></a></li>
+      <li><a href="/#oficina" class="c-oficina"><span class="mosaico-icono" aria-hidden="true">📎</span><strong><span data-idioma="es">Oficina</span><span data-idioma="en" hidden>Office</span></strong></a></li>
+      <li><a href="/#escolar" class="c-escolar"><span class="mosaico-icono" aria-hidden="true">🎒</span><strong><span data-idioma="es">Escolar</span><span data-idioma="en" hidden>School</span></strong></a></li>
+      <li><a href="/#jardineria" class="c-jardineria"><span class="mosaico-icono" aria-hidden="true">🌱</span><strong><span data-idioma="es">Jardinería</span><span data-idioma="en" hidden>Garden</span></strong></a></li>
+      <li><a href="/#limpieza" class="c-limpieza"><span class="mosaico-icono" aria-hidden="true">🧽</span><strong><span data-idioma="es">Limpieza</span><span data-idioma="en" hidden>Cleaning</span></strong></a></li>
+    </ul>
+
+    <div class="error-ayuda">
+      <a class="cta-catalogo" href="/"><span data-idioma="es">← Volver al inicio</span><span data-idioma="en" hidden>← Back to home</span></a>
+      <a href="/pedido.html"><span data-idioma="es">Rastrear mi pedido</span><span data-idioma="en" hidden>Track my order</span></a>
+      <a href="/apartado.html"><span data-idioma="es">Mi apartado</span><span data-idioma="en" hidden>My layaway</span></a>
+    </div>
+    <p class="nota"><span data-idioma="es">¿Llegaste aquí desde un enlace de nuestra tienda? Avísanos para corregirlo:</span><span data-idioma="en" hidden>Did a link on our store bring you here? Let us know so we can fix it:</span> __CORREO__</p>
+  </main>
+<script src="/js/error.js"></script>
+</body>
+</html>

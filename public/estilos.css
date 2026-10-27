@@ -501,3 +501,82 @@ h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.05; font-weight: 800; l
 .linea-tiempo li.actual { color: var(--tinta); font-weight: 700; }
 .linea-tiempo li.actual::before { background: var(--acento); color: var(--acento-tinta); }
 .detalle-envio { font-size: .92rem; }
+
+/* ---------- Páginas de error ---------- */
+
+/* ---------- Aviso de privacidad y términos ---------- */
+.legal { max-width: 760px; margin: 0 auto; padding: 2rem 16px 4rem; line-height: 1.65; }
+.legal h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); max-width: none; }
+.legal h2 { font-size: 1.2rem; margin: 2rem 0 .5rem; }
+.legal ul { padding-left: 1.2rem; }
+.legal li { margin: .3rem 0; }
+.legal a { color: var(--tinta); text-decoration-color: var(--acento); text-underline-offset: 3px; }
+.completar { background: color-mix(in srgb, var(--sol) 35%, transparent); border-radius: 4px; padding: 0 .25rem; font-weight: 600; }
+
+/* ---------- Aviso de almacenamiento (cookies) ---------- */
+.aviso-cookies { position: fixed; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 40; max-width: 560px; margin: 0 auto; display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; background: var(--tinta); color: var(--fondo); padding: .8rem 1rem; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.25); font-size: .88rem; }
+.aviso-cookies p { margin: 0; flex: 1 1 260px; }
+.aviso-cookies a { color: var(--sol); }
+.aviso-cookies button { background: var(--acento); color: var(--acento-tinta); border: 0; border-radius: 10px; padding: .5rem 1rem; font-weight: 700; min-height: 40px; }
+@media (max-width: 900px) { .aviso-cookies { bottom: calc(110px + env(safe-area-inset-bottom)); } }
+
+/* Enlace para saltar directo al catálogo (teclado y lectores de pantalla) */
+.saltar { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--tinta); color: var(--fondo); padding: .6rem 1rem; border-radius: 10px; font-weight: 700; text-decoration: none; }
+.saltar:focus { top: 12px; }
+
+/* ---------- Páginas 404 y 500 ---------- */
+.pagina-error { max-width: 880px; margin: 0 auto; padding: 1.5rem 16px 4rem; }
+.error-cabecera { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.75rem; align-items: center; margin: 1rem 0 2rem; }
+.error-cabecera h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); max-width: 18ch; margin-bottom: .6rem; }
+.error-cabecera p { color: var(--tinta-suave); max-width: 55ch; margin: 0; }
+.codigo-error { font-size: clamp(3.5rem, 12vw, 5.5rem); font-weight: 800; line-height: 1; margin: 0 0 .25rem !important; color: var(--acento) !important; letter-spacing: -.04em; }
+/* Sol asomándose detrás de una nube (404) o tapado por una nube gris (500) */
+.sol-error { position: relative; width: clamp(110px, 22vw, 170px); aspect-ratio: 1; }
+.sol-error::before { content: ""; position: absolute; inset: 8%; border-radius: 50%; background: var(--sol); box-shadow: 0 0 0 10px color-mix(in srgb, var(--sol) 25%, transparent); animation: asomar 4s ease-in-out infinite; }
+.sol-error .nube { position: absolute; left: 22%; right: -6%; bottom: 6%; height: 42%; background: var(--superficie); border: 1px solid var(--linea); border-radius: 999px; box-shadow: 0 8px 20px rgba(42, 30, 18, .1); }
+.sol-error .nube::before, .sol-error .nube::after { content: ""; position: absolute; background: inherit; border: inherit; border-bottom: 0; border-radius: 50%; }
+.sol-error .nube::before { width: 48%; height: 110%; left: 14%; bottom: 35%; }
+.sol-error .nube::after { width: 36%; height: 80%; left: 50%; bottom: 40%; }
+.sol-error.tormenta .nube { background: color-mix(in srgb, var(--tinta-suave) 35%, var(--superficie)); }
+@keyframes asomar { 50% { transform: translate(-4px, -6px); } }
+.buscar-error { margin: 0 0 2rem; }
+.buscar-error label { display: block; font-weight: 700; margin-bottom: .5rem; }
+.buscar-fila { display: flex; gap: .5rem; flex-wrap: wrap; }
+.buscar-fila input { flex: 1 1 240px; min-width: 0; font: inherit; padding: .75rem 1rem; border: 1.5px solid var(--linea); border-radius: 999px; background: var(--superficie); color: var(--tinta); min-height: 48px; }
+.buscar-fila button { background: var(--acento); color: var(--acento-tinta); border: 0; border-radius: 999px; padding: .7rem 1.4rem; font-weight: 700; min-height: 48px; }
+.error-subtitulo { font-size: 1.1rem; margin: 0 0 .75rem; }
+.error-categorias { margin-bottom: 2rem; }
+.error-categorias a { grid-template-rows: auto; }
+.error-categorias .mosaico-icono { grid-row: auto; }
+.error-ayuda { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; margin: 0 0 1.25rem; }
+.error-ayuda a:not(.cta-catalogo) { color: var(--tinta); font-weight: 600; text-decoration-color: var(--acento); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.error-ayuda .cta-catalogo { color: var(--acento-tinta); text-decoration: none; }
+.tranquilidad h2 { margin: 0 0 .5rem; font-size: 1.15rem; }
+.tranquilidad ul { margin: 0; padding-left: 1.2rem; display: grid; gap: .35rem; }
+@media (max-width: 600px) {
+  .error-cabecera { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .sol-error { width: 110px; }
+}
+@media (prefers-reduced-motion: reduce) { .sol-error::before { animation: none; } }
+.pie-legal { margin-top: 2.5rem; font-size: .8rem; } .pie-legal a { color: var(--tinta-suave); }
+
+/* ---------- Panel: devoluciones ---------- */
+.devolucion-caja { grid-column: 1 / -1; padding: .7rem .8rem; border-radius: 10px; border: 1.5px dashed color-mix(in srgb, var(--error) 45%, var(--linea)); background: color-mix(in srgb, var(--error) 5%, var(--superficie)); font-size: .88rem; }
+.devolucion-caja p { margin: 0 0 .5rem; }
+.devolucion-caja label { display: inline-flex; gap: .4rem; align-items: center; margin-bottom: .5rem; }
+.devolucion-caja input { font: inherit; width: 8rem; padding: .3rem .5rem; border: 1px solid var(--linea); border-radius: 8px; background: var(--superficie); color: var(--tinta); }
+.dev-botones { display: flex; flex-wrap: wrap; gap: .4rem; }
+.dev-botones button { font: inherit; font-size: .82rem; font-weight: 700; border: 0; border-radius: 8px; padding: .4rem .8rem; min-height: 34px; background: var(--acento); color: var(--acento-tinta); }
+.dev-botones button.secundario { background: transparent; color: var(--tinta); border: 1.5px solid var(--linea); }
+
+/* ---------- Solicitud de devolución (cliente) ---------- */
+.dev-form { display: grid; gap: .6rem; margin-top: .75rem; }
+.dev-form label { font-weight: 600; font-size: .9rem; }
+.dev-form select, .dev-form textarea { font: inherit; padding: .6rem .7rem; border: 1.5px solid var(--linea); border-radius: 10px; background: var(--superficie); color: var(--tinta); min-width: 0; }
+.dev-opciones { border: 0; padding: 0; margin: .25rem 0; display: grid; gap: .4rem; }
+.dev-opciones legend { font-weight: 600; font-size: .9rem; margin-bottom: .3rem; padding: 0; }
+.dev-opciones label { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .6rem; align-items: start; padding: .6rem .7rem; border: 1.5px solid var(--linea); border-radius: 10px; font-weight: 400; cursor: pointer; }
+.dev-opciones label:has(input:checked) { border-color: var(--acento); background: color-mix(in srgb, var(--sol) 12%, var(--superficie)); }
+.dev-opciones input { accent-color: var(--acento); margin-top: .2rem; }
+.dev-opciones small { display: block; color: var(--tinta-suave); font-size: .8rem; }
+.legal ol { padding-left: 1.3rem; } .legal ol li { margin: .45rem 0; }

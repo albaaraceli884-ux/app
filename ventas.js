@@ -111,6 +111,11 @@ async function obtenerPedidos(stripe, { desde, hasta }, paypal = null) {
         costo: s.shipping_cost?.amount_total || parseInt(s.metadata?.envio || '0', 10) || 0,
         tipo: meta.envio_tipo || 'domicilio', sucursal,
       },
+      devolucion: meta.devolucion_estado ? {
+        estado: meta.devolucion_estado, motivo: meta.devolucion_motivo || '', preferencia: meta.devolucion_preferencia || '',
+        comentario: meta.devolucion_comentario || '', resolucion: meta.devolucion_resolucion || '',
+        monto: parseInt(meta.devolucion_monto || '0', 10) || 0, codigo: meta.devolucion_codigo || '', fecha: meta.devolucion_fecha || '',
+      } : null,
       apartado: s.metadata?.apartado || '',
       cliente: s.customer_details?.name || '',
       email: s.customer_details?.email || '',
@@ -191,6 +196,11 @@ function resumir(pedidos, { desde, hasta }) {
     ventas,
     reembolsos,
     cobradoApartados,
+    // Devoluciones del periodo: abiertas (por atender), dinero que salió y saldo que se quedó en la tienda
+    devolucionesAbiertas: pedidos.filter((p) => ['solicitada', 'aprobada', 'recibida'].includes(p.devolucion?.estado)).length,
+    devolucionesReembolsadas: pedidos.filter((p) => /^reembolso/.test(p.devolucion?.resolucion || '')).reduce((s, p) => s + (p.devolucion.monto || 0), 0),
+    devolucionesEnSaldo: pedidos.filter((p) => p.devolucion?.resolucion === 'saldo').reduce((s, p) => s + (p.devolucion.monto || 0), 0),
+    devolucionesCambio: pedidos.filter((p) => p.devolucion?.resolucion === 'cambio').length,
     pedidosCobrados: nuevos.length,
     apartadosNuevos: nuevos.filter((p) => p.tipo === 'apartado').length,
     pendientes: pedidos.length - cobrados.length,
@@ -254,6 +264,11 @@ async function generarExcel(pedidos, resumen, { etiqueta, apartados = [] }) {
     { header: 'Costo de envío', key: 'costoEnvio', width: 14, style: { numFmt: fmtDinero } },
     { header: 'Método de pago', key: 'metodo', width: 14 },
     { header: 'Entrega', key: 'entrega', width: 30 },
+    { header: 'Devolución', key: 'devolucion', width: 14 },
+    { header: 'Motivo devolución', key: 'motivoDev', width: 16 },
+    { header: 'Resolución', key: 'resolucion', width: 16 },
+    { header: 'Monto devolución', key: 'montoDev', width: 15, style: { numFmt: fmtDinero } },
+    { header: 'Código saldo', key: 'codigoSaldo', width: 13 },
   ];
   pedidos.forEach((p, i) => {
     const r = i + 2;
@@ -280,6 +295,11 @@ async function generarExcel(pedidos, resumen, { etiqueta, apartados = [] }) {
       costoEnvio: (p.envio?.costo || 0) / 100,
       metodo: p.metodo === 'paypal' ? 'PayPal' : 'Tarjeta',
       entrega: p.envio?.tipo === 'sucursal' ? `Recoger: ${p.envio.sucursal}` : 'A domicilio',
+      devolucion: p.devolucion?.estado || '',
+      motivoDev: p.devolucion?.motivo || '',
+      resolucion: p.devolucion?.resolucion || '',
+      montoDev: (p.devolucion?.monto || 0) / 100,
+      codigoSaldo: p.devolucion?.codigo || '',
     });
   });
   encabezado(hp);

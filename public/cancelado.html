@@ -15,17 +15,8 @@
     <h1 id="titulo">No se hizo ningún cobro</h1>
     <p id="texto">Cancelaste el pago antes de terminar. Tu carrito sigue guardado: puedes volver a la tienda e intentarlo cuando quieras.</p>
     <p><a href="/" id="volver">Volver a la tienda</a></p>
+    <p class="nota pie-legal"><a href="/privacidad.html">Aviso de privacidad · Privacy notice</a> · <a href="/terminos.html">Términos de uso · Terms of use</a></p>
   </main>
-<script>
-if (new URLSearchParams(location.search).get('lang') === 'en') {
-  document.documentElement.lang = 'en';
-  document.title = 'Payment canceled — Sun Shine';
-  document.getElementById('titulo').textContent = 'You were not charged';
-  document.getElementById('texto').textContent = 'You canceled the payment before finishing. Your cart is still saved, so you can go back and try again anytime.';
-  const v = document.getElementById('volver');
-  v.textContent = 'Back to store';
-  v.href = '/?lang=en';
-}
-</script>
+<script src="/js/cancelado.js"></script>
 </body>
 </html>
