@@ -23,6 +23,9 @@ services:
         sync: false
       - key: PAYPAL_MODO
         value: sandbox
+      # Tu dominio: lo usan el código QR, los enlaces de pago y apartados, y el sitemap
+      - key: DOMAIN
+        value: https://sunshinetienda.com
       - key: AMAZON_TAG_MX
         sync: false
       - key: AMAZON_TAG_US

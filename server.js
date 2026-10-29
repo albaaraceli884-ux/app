@@ -184,6 +184,25 @@ app.use(express.static(RUTA_PUBLICA, {
   setHeaders: (res, ruta) => { if (ruta.endsWith('sw.js') || ruta.endsWith('.html')) res.setHeader('Cache-Control', 'no-cache'); },
 }));
 
+// Código QR que lleva a la tienda (DOMAIN): en el pie de página y para imprimir desde el panel.
+// /qr.svg para la página, /qr.png en alta calidad; ?descargar=1 lo baja como archivo.
+const QRCode = require('qrcode');
+const OPCIONES_QR = { errorCorrectionLevel: 'M', margin: 2, color: { dark: '#2A1E12', light: '#FFFFFF' } };
+const qrListo = Promise.all([
+  QRCode.toString(DOMAIN, { ...OPCIONES_QR, type: 'svg' }),
+  QRCode.toBuffer(DOMAIN, { ...OPCIONES_QR, type: 'png', width: 1200 }),
+]);
+const enviarQr = (tipo, i) => async (req, res, next) => {
+  try {
+    const qr = (await qrListo)[i];
+    res.type(tipo).setHeader('Cache-Control', 'public, max-age=3600');
+    if (req.query.descargar) res.attachment(`qr-sunshine.${tipo}`);
+    res.send(qr);
+  } catch (err) { next(err); }
+};
+app.get('/qr.svg', enviarQr('svg', 0));
+app.get('/qr.png', enviarQr('png', 1));
+
 app.get('/salud', (_req, res) => res.send('ok'));
 
 // ---------------------------------------------------------------
